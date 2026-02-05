@@ -1,0 +1,6 @@
+{
+  "jsPlugins": [{ "name": "react-hooks-js", "specifier": "eslint-plugin-react-hooks" }],
+  "rules": {  
+    "react-hooks-js/set-state-in-render": "error",
+  }
+}
