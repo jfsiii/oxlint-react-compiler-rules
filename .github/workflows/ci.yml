@@ -1,7 +1,7 @@
 name: lint
 on: push
 jobs:
-  lint:
+  lint-pnpm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,3 +14,12 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm lint
+  lint-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npx oxlint --type-aware --type-check
