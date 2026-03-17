@@ -1,7 +1,7 @@
 name: lint
 on: push
 jobs:
-  lint-pnpm:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,24 +13,23 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install
-      - run: pnpm lint
-  lint-npm:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - run: npm install --legacy-peer-deps
-      - run: npx oxlint --type-aware --type-check
-  lint-npm-subdir:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - run: npm install --legacy-peer-deps
-      - name: Run from subdir (like our monorepo)
-        working-directory: ./src
-        run: npx oxlint --type-aware --type-check .
+      - run: node --version && npx oxlint --version
+
+      - name: "1. set-state-in-render (should fail)"
+        run: npx oxlint src/App.tsx
+        continue-on-error: true
+
+      - name: "2. set-state-in-effect — no deps (should fail)"
+        run: npx oxlint src/effect-no-deps.tsx
+        continue-on-error: true
+
+      - name: "3. set-state-in-effect — empty deps [] (should fail)"
+        run: npx oxlint src/effect-empty-deps.tsx
+        continue-on-error: true
+
+      - name: "4. set-state-in-effect — with deps [value] (should fail — BUG: passes)"
+        run: npx oxlint src/effect-with-deps.tsx
+        continue-on-error: true
+
+      - name: Summary
+        run: echo "If step 4 passed with no output, that is the bug. All 4 should produce errors."
