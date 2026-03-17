@@ -21,5 +21,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install
+      - run: npm install --legacy-peer-deps
       - run: npx oxlint --type-aware --type-check
+  lint-npm-subdir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --legacy-peer-deps
+      - name: Run from subdir (like our monorepo)
+        working-directory: ./src
+        run: npx oxlint --type-aware --type-check .
