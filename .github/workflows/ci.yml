@@ -16,19 +16,19 @@ jobs:
       - run: node --version && npx oxlint --version
 
       - name: "1. set-state-in-render (should fail)"
-        run: npx oxlint src/App.tsx
+        run: npx oxlint --type-aware --type-check src/App.tsx
         continue-on-error: true
 
       - name: "2. set-state-in-effect — no deps (should fail)"
-        run: npx oxlint src/effect-no-deps.tsx
+        run: npx oxlint --type-aware --type-check src/effect-no-deps.tsx
         continue-on-error: true
 
       - name: "3. set-state-in-effect — empty deps [] (should fail)"
-        run: npx oxlint src/effect-empty-deps.tsx
+        run: npx oxlint --type-aware --type-check src/effect-empty-deps.tsx
         continue-on-error: true
 
       - name: "4. set-state-in-effect — with deps [value] (should fail — BUG: passes)"
-        run: npx oxlint src/effect-with-deps.tsx
+        run: npx oxlint --type-aware --type-check src/effect-with-deps.tsx
         continue-on-error: true
 
       - name: Summary
